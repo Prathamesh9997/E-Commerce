@@ -1,14 +1,25 @@
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
-import  thunk from "redux-thunk";
+import thunk from "redux-thunk";
+import { cartReducer } from "./reducers/cartReducers";
 import { productDetailsReducer, productListReducer } from "./reducers/productReducers";
+import { userSigninReducer } from "./reducers/userReducers";
 
-const initialState = {};
+const initialState = {
+    userSignin: {
+        userInfo: localStorage.getItem("userInfo") ? JSON.parse(localStorage.getItem("userInfo")) : null,
+    },
+    cart: {
+        cartItems: localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [],
+    }
+};
 const reducer = combineReducers({
-    productList : productListReducer,
-    productDetails : productDetailsReducer
+    productList: productListReducer,
+    productDetails: productDetailsReducer,
+    cart: cartReducer,
+    userSignin: userSigninReducer
 });
 
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||compose; //adds redux to chrome dev tools
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; //adds redux to chrome dev tools
 const store = createStore(reducer, initialState, composeEnhancer(applyMiddleware(thunk))); //thunk: used to send ajax request
 
 export default store;
