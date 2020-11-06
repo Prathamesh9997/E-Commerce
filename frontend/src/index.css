@@ -226,6 +226,10 @@ img.large {
   background-color: #ffe0e0e0;
 }
 
+.loading {
+  display: block !important;
+}
+
 /* Form */
 .form {
   max-width: 60rem;
@@ -240,7 +244,6 @@ img.large {
 
 .form label {
   margin: 1rem 0;
-  display: block;
 }
 
 /* Dropdown */
@@ -265,4 +268,18 @@ img.large {
 
 .dropdown:hover .dropdown-content {
   display: block;
+}
+
+/* checkout */
+.checkout-steps > div {
+  border-top: 0.3rem #c0c0c0 solid;
+  color: #c0c0c0;
+  flex: 1;
+  padding: 1rem; 
+}
+
+.checkout-steps > div.active {
+  border-top-color: #f08000;
+  color: #f08000;
+  font-weight: bold;
 }

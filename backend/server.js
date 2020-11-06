@@ -3,6 +3,7 @@ import mongoose from "mongoose"
 import dotenv from "dotenv";
 import userRouter from "./routers/userRouters.js";
 import productRouter from "./routers/productRouters.js";
+import orderRouter from "./routers/orderRouters.js";
 
 dotenv.config();
 const app = express();
@@ -39,6 +40,7 @@ app.get("/", function (req, res) {
 //here we are fetching data from db and inserting data into db through api
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
+app.use("/api/orders", orderRouter);
 
 //send errors to user
 app.use((err, req, res, next) => {
