@@ -42,6 +42,11 @@ app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 
+//to send client id from backend to frontend
+app.get("/api/config/paypal", (req, res) => {
+    res.send(process.env.PAYPAL_CLIENT_ID || "sb");
+})
+
 //send errors to user
 app.use((err, req, res, next) => {
     res.status(500).send({message: err.message});
