@@ -1,9 +1,11 @@
 import express from "express";
 import mongoose from "mongoose"
 import dotenv from "dotenv";
+import path from "path";
 import userRouter from "./routers/userRouters.js";
 import productRouter from "./routers/productRouters.js";
 import orderRouter from "./routers/orderRouters.js";
+import uploadRouter from "./routers/uploadRouter.js";
 
 dotenv.config();
 const app = express();
@@ -41,11 +43,17 @@ app.get("/", function (req, res) {
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/uploads", uploadRouter);
+
 
 //to send client id from backend to frontend
 app.get("/api/config/paypal", (req, res) => {
     res.send(process.env.PAYPAL_CLIENT_ID || "sb");
 })
+
+//for image upload
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 //send errors to user
 app.use((err, req, res, next) => {

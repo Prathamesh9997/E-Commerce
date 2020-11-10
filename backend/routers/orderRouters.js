@@ -1,9 +1,28 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import Order from '../models/orderModels.js';
-import { isAuth } from '../utils.js';
+import { isAdmin, isAuth } from '../utils.js';
 
 const orderRouter = express.Router();
+
+//List orders for admin
+orderRouter.get("/", isAuth, isAdmin, expressAsyncHandler( async (req, res) => {
+    const orders = await Order.find({}).populate("user", "name");  //like join operation
+    res.send(orders)
+}));
+
+//delete order
+orderRouter.delete("/:id", isAuth, isAdmin, expressAsyncHandler( async (req, res) => {
+    const orderId = req.params.id;
+    const order = await Order.findById(orderId);
+
+    if(order) {
+        const deleteOrder = await order.remove();
+        res.send({message: "Order deleted", order: deleteOrder});
+    } else {
+        res.status(404).send({ message: "Order Not Found" });
+    }
+}));
 
 //API for oder hsitory
 orderRouter.get("/mine", isAuth, expressAsyncHandler(async (req, res) => {
@@ -63,4 +82,16 @@ orderRouter.put("/:id/pay", isAuth, expressAsyncHandler(async (req, res) => {
     }
 }));
 
+//API for updating delivery status
+orderRouter.put("/:id/deliver", isAuth, expressAsyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+        const updatedOrder = await order.save();
+        res.send({ message: "Order delivered", order: updatedOrder });
+    } else {
+        res.status(404).send({ message: "Order Not Found" });
+    }
+}));
 export default orderRouter;
