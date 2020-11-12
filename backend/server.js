@@ -1,5 +1,5 @@
 import express from "express";
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import path from "path";
 import userRouter from "./routers/userRouters.js";
@@ -10,17 +10,17 @@ import uploadRouter from "./routers/uploadRouter.js";
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 
 //connecting to mongodb
-mongoose.connect( process.env.MONGODB_URL || "mongodb://localhost/amazona", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
+mongoose.connect(process.env.MONGODB_URL || "mongodb://localhost/amazona", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 app.get("/", function (req, res) {
-    res.send("Server is ready");
+  res.send("Server is ready");
 });
 
 //below code was for static data
@@ -38,29 +38,27 @@ app.get("/", function (req, res) {
 //     }
 // });
 
-
 //here we are fetching data from db and inserting data into db through api
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/uploads", uploadRouter);
 
-
 //to send client id from backend to frontend
 app.get("/api/config/paypal", (req, res) => {
-    res.send(process.env.PAYPAL_CLIENT_ID || "sb");
-})
+  res.send(process.env.PAYPAL_CLIENT_ID || "sb");
+});
 
 //for image upload
 const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 //send errors to user
 app.use((err, req, res, next) => {
-    res.status(500).send({message: err.message});
+  res.status(500).send({ message: err.message });
 });
 
 const port = process.env.PORT || 5001;
 app.listen(port, function () {
-    console.log("Server is up & running");
+  console.log("Server is up & running");
 });
